@@ -4,6 +4,11 @@
     <title>GEL - Type</title>
     <link rel="stylesheet" href="test/lib/qunit.css">
     <meta charset="utf-8">
+    <style>
+        p {
+            line-height: 24px;
+        }
+    </style>
 </head>
 <body>
     <div id="qunit"></div>
@@ -181,7 +186,7 @@
         <p>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. In feugiat aliquam quam, at pharetra purus mattis dictum. Fusce vel bibendum sem. Maecenas at elementum nibh. Mauris accumsan mattis turpis, vitae blandit <small>small text</small> arcu ornare ultricies. Duis lacus diam, scelerisque vitae volutpat in, laoreet vel mauris. Etiam id nibh purus. Nulla facilisi. Vivamus lobortis varius velit, at mollis urna hendrerit eu. Curabitur malesuada, tortor non pharetra tincidunt, augue orci molestie nisl, at cursus magna est in ante. Ut dui lacus, elementum nec pellentesque nec, vestibulum eu dolor. Nam sit amet ligula mi, eget dapibus dui.
         </p>
-        <p>
+        <p style="line-height: normal">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. In feugiat aliquam quam, at pharetra purus mattis dictum. Fusce vel bibendum sem. Maecenas at elementum nibh. Mauris accumsan mattis turpis, vitae blandit <small>small text</small> arcu ornare ultricies. Duis lacus diam, scelerisque vitae volutpat in, laoreet vel mauris. Etiam id nibh purus. Nulla facilisi. Vivamus lobortis varius velit, at mollis urna hendrerit eu. Curabitur malesuada, tortor non pharetra tincidunt, augue orci molestie nisl, at cursus magna est in ante. Ut dui lacus, elementum nec pellentesque nec, vestibulum eu dolor. Nam sit amet ligula mi, eget dapibus dui.
         </p>
     </div>
@@ -206,6 +211,10 @@
                         fontSize: '39px',
                         lineHeight: 'normal'
                     }
+                },
+                {
+                    selector: 'p',
+                    baseline: 8
                 }
             ]);
 

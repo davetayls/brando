@@ -1,93 +1,111 @@
 (function($){
 
-    var $brando = $('#brando')
-    ;
-
-    var Expect = window.Expect = function(opts){
+    var Expect = window.Expect = function(suite, opts){
         this.failures = [];
         this.passes = [];
         this.not = [];
-        this.css = {};
-        $.extend(this, opts);
+        this.properties = {};
+        this.suite = suite;
+
+        this.selector = opts.selector;
+        delete opts.selector;
+        $.extend(this.properties, opts);
     };
     Expect.prototype = {
-        selector: ''
-    };
+        selector: '',
+        iterateProperties: function($el){
+            var self = this,
+                failCount = 0
+            ;
+            for (var key in self.properties){
+                if (self.properties.hasOwnProperty(key)){
+                    if ($.isFunction(self[key])){
+                        failCount += self[key]($el, self.properties[key]);
+                    }
+                }
+            }
+            return failCount;
+        },
+        check: function(result){
+            if (result.actual !== result.expected){
+                this.fail(result);
+                return 1;
+            } else {
+                this.pass(result);
+                return 0;
+            }
+        },
+        pass: function(result){
+            this.passes.push(result);
+        },
+        fail: function(result){
+            this.failures.push(result);
+            this.suite.failures.push(result);
+            console.error([this.selector, result.$el[0], result, this]);
+        },
+        baseline: function($el, val){
+            var expect = this,
+                failCount = 0,
+                actual,
 
-    if (!$brando.length){
-        $brando = $('<div id="brando" />').appendTo('body');
-    }
+                lineHeight = $el.css('lineHeight'),
+                lineHeightVal = parseInt(lineHeight, 10)
+            ;
+            // create actual values holder
+            if (lineHeightVal === 0){
+                actual = lineHeight;
+            } else {
+                actual = lineHeightVal % val === 0 ? val : lineHeight;
+            }
+            failCount += expect.check({
+                $el: $el,
+                key: 'baseline',
+                expected: val,
+                actual: actual
+            });
 
-    var appendInfo = function($el, properties) {
-        var $info = $('<span class="brando-info" />').appendTo($el),
-            info  = []
-        ;
-        $(properties).each(function(){
-            info.push(this[0] + ': ' + this[1]);
-        });
-        $info.append(info.join(', '));
+            return ;
+        },
+        css: function($el, val){
+            var expect = this,
+                failCount = 0
+            ;
+            // create actual values holder
+            val.actual = $;
+
+            // check each css property
+            for (var key in val){
+                if (val.hasOwnProperty(key) && key !== 'actual'){
+                    // calculate values
+                    val.actual[key] = $el.css(key);
+                    failCount += expect.check({
+                        $el: $el,
+                        key: key,
+                        expected: val[key],
+                        actual: val.actual[key]
+                    });
+                }
+            }
+            return failCount;
+        }
     };
 
     var Brando = window.Brando = function(){};
     Brando.prototype = {
-        callback: function(html){
-            // $brando.find('>*,li:first-child,img').each(function(){
-            //     var $this = $(this);
-            //     appendInfo($this, [
-            //         ['', this.tagName],
-            //         ['font-size', $this.css('font-size')],
-            //         ['line-height', $this.css('line-height')]
-            //     ]);
-            // });
-        },
-        show: function(){
-            $brando.show();
-        },
-        hide: function(){
-            $brando.hide();
-        },
-        suite: function(url){
-            $.getScript(url);
-        },
         expect: function(expects){
             var self = this;
             console.log('Brando Started');
             expects.failures = [];
             $(expects).each(function(){
-                var expect = new Expect(this),
+                var expect = new Expect(expects, this),
                     failCount = 0
                 ;
-                expect.actual = {};
                 $(expect.selector)
-                .not(expect.not.join())
-                .each(function(){
-                    var $this = $(this),
-                        failure;
-                    for (var key in expect.css){
-                        if (expect.css.hasOwnProperty(key)){
-                        expect.actual[key] = $this.css(key);
-                            if (expect.actual[key] !== expect.css[key]){
-                                failure = {
-                                    $el: $this,
-                                    css: key,
-                                    expected: expect.css[key],
-                                    actual: expect.actual[key]
-                                };
-                                expect.failures.push(failure);
-                                expects.failures.push(failure);
-                                console.error([expect.selector, $this[0], failure, expect]);
-                                failCount++;
-                            } else {
-                                expect.passes.push({
-                                    $el: $this,
-                                    css: key,
-                                    expected: expect.css[key],
-                                    actual: expect.actual[key]
-                                });
-                            }
-                        }
-                    }
-                });
+                    .not(expect.not.join())
+                    .each(function(){
+                        var $this = $(this);
+                        failCount += expect.iterateProperties($this);
+                    });
                 self.logExpect(expect, failCount);
             });
             self.logSuiteResults(expects);

@@ -55,13 +55,16 @@ Brando is fully extensible with the ability to add new properties to expectation
 You simply attach the property name as a function on `Expect.prototype` and this will be matched via the name on properties.
 
     Expect.prototype.name = function($el, val){
-        var failCount = 0;
+        var failCount = 0,
+            actual;
+        // -> do checks
+        actual = 'foo';
         // run each result through the check function
         failCount += expect.check({
             $el: $el,
-            key: key,
-            expected: val[key],
-            actual: val.actual[key]
+            key: 'name',
+            expected: val,
+            actual: actual
         });
         
         // the function must return the fail count

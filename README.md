@@ -40,5 +40,41 @@ automated with Grunt/PhantomJs.
                 fontSize: '16px'
             },
             baseline: 8
+        },
+        {
+            selector: 'h1,h2,h3,h4,h5,h6,p,ul,ol,li,dl,dt,dd,blockquote',
+            baseline: 8
+        }
+        
+    ]);
+
+## Extensible
+
+Brando is fully extensible with the ability to add new properties to expectations.
+
+You simply attach the property name as a function on `Expect.prototype` and this will be matched via the name on properties.
+
+    Expect.prototype.name = function($el, val){
+        var failCount = 0;
+        // run each result through the check function
+        failCount += expect.check({
+            $el: $el,
+            key: key,
+            expected: val[key],
+            actual: val.actual[key]
+        });
+        
+        // the function must return the fail count
+        return failCount;
+    }
+
+You can then use this within the expect call
+
+    b.expect([
+        {
+            selector: 'h1',
+            name: value // passed to val
         }
     ]);
+
+

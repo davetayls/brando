@@ -1,12 +1,15 @@
 /**
  * QUnit plugin for Brando
  */
-;(function(){
+;(function($){
 
     var errCount = 0,
-        cssClassBase = 'brando-qunit-fail';
+        cssClassBase = 'brando-qunit-fail',
+        styles = '<style> .brando-qunit-fail {outline: dashed 2px red; } </style>'
+    ;
 
     window.Brando.prototype.qunit = function(){
+        $('head').append(styles);
         this.bind('result', function(ev, message, expect){
             QUnit.test(message, function(){
                 var i, f, p, cssClass;
@@ -27,4 +30,4 @@
         return this;
     };
 
-})();
+})(jQuery);

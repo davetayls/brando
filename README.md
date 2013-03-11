@@ -120,7 +120,7 @@ You simply attach the property name as a function on `Expect.prototype` and this
         // -> do checks
         actual = 'foo';
         // run each result through the check function
-        failCount += expect.check({
+        failCount += this.check({
             $el: $el,
             key: 'name',
             expected: val,

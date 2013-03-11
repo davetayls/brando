@@ -6,6 +6,12 @@ A brand test suite that allows you to test styles within an html page.
 It currently logs to the console and can also integrate with QUnit to be
 automated with Grunt/PhantomJs.
 
+![](https://lh4.googleusercontent.com/-HK5YXZtMxTQ/UT2aIwkh-OI/AAAAAAAAvaU/UrJUFZrzXZQ/s640/brandolog.png)
+
+## Contributions
+
+I welcome any thoughts on how this can be improved. If you have an idea please submit an issue.
+
 ## Usage
 
 ### Include Scripts
@@ -47,6 +53,52 @@ automated with Grunt/PhantomJs.
         }
         
     ]);
+
+## Exclusions
+
+There are always exceptions to a rule, and you can include these like so:
+
+    {
+        selector: 'p',
+        not: [
+            '.special',
+            '.shout'
+        ],
+        ...
+    ]
+
+## Built in expectations
+
+### CSS Computed Values
+
+Check against an element's computed css value. You can specify multiple properties to check against.
+
+    {
+        selector: 'p',
+        css: {
+            fontSize: '16px',
+            color: '#444',
+            ...
+        }
+    }
+
+### Baseline
+
+This checks against the design principle that an element's `line-height` should be a multiplication of the design's baseline.
+
+For example, if the baseline for a design is 8 then:
+
+ - A paragraph with a `font-size` of __14px__ should have a `line-height` of __16px__
+ - A heading with a `font-size` of __18px__ should have a `line-height` of __24px__
+ - A heading with a `font-size` of __20px__ should also have a `line-height` of __24px__
+
+Here is how you would check this:
+
+    {
+        selector: 'p,h1,h2',
+        baseline: 8
+    }
+
 
 ## Extensible
 

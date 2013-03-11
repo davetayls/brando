@@ -8,6 +8,14 @@ automated with Grunt/PhantomJs.
 
 ![](https://lh4.googleusercontent.com/-HK5YXZtMxTQ/UT2aIwkh-OI/AAAAAAAAvaU/UrJUFZrzXZQ/s640/brandolog.png)
 
+## Why?
+
+ - Because I love consistent design
+ - Because I don't want to lose the care and attention designers have put in to the finer detail
+ - I hate the maintenance headaches of regression.
+ - When you get a base set of styles right, it's easier to build modular CSS
+ - Design is as important as code, and I want to automate the tests
+
 ## Contributions
 
 I welcome any thoughts on how this can be improved. If you have an idea please submit an issue.
